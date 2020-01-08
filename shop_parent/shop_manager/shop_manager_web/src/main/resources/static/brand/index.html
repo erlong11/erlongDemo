@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>品牌页面</title>
+    <link href="../elementUI/index.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="app">
+    <p>
+        <el-button size="small" type="info" @click="dialogVisible = true">
+            <i class="el-icon-plus">添加</i>
+        </el-button>
+        <el-button size="small" type="primary" @click="checkUpdate" :disabled="updateFlag">
+            <i class="el-icon-edit">修改</i>
+        </el-button>
+        <el-button type="danger" icon="el-icon-delete" size="small" @click="deletes" :disabled="delFlag">批量删除</el-button>
+
+    </p>
+
+
+    <el-dialog
+            width="30%"
+            :before-close="handleCloseDialog"
+            :visible.sync="dialogVisible"
+            title="添加/修改">
+        <el-form :model="formData" :rules="rules" ref="brandForm">
+            <el-form-item label="品牌名称" prop="brandName">
+                <el-input v-model="formData.brandName" style="width: 30%" size="small"></el-input>
+            </el-form-item>
+            <el-form-item label="排序">
+                <el-input v-model="formData.brandSort" style="width: 30%" size="small"></el-input>
+            </el-form-item>
+            <el-form-item label="Logo">
+                <el-input v-model="formData.brandLogo" style="width: 30%" size="small"></el-input>
+            </el-form-item>
+            <el-form-item label="描述">
+                <el-input v-model="formData.introduce" style="width: 30%" size="small"></el-input>
+            </el-form-item>
+            <el-form-item label="地址">
+                <el-input v-model="formData.brandUrl" style="width: 30%" size="small"></el-input>
+            </el-form-item>
+        </el-form>
+
+        <p align="center">
+            <span slot="footer" class="dialog-footer">
+               <el-button type="primary" @click="submitFormData" size="mini">确定</el-button>
+               <el-button @click="cancel" size="mini">取消</el-button>
+            </span>
+        </p>
+    </el-dialog>
+
+    <el-table
+            :data="list"
+            stripe
+            border
+            style="width: 100%"
+            @selection-change="getSelection">
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column label="序号">
+            <template slot-scope="scope">
+                {{scope.$index+1}}
+            </template>
+        </el-table-column>
+        <el-table-column prop="brandName" label="品牌名称"></el-table-column>
+        <el-table-column prop="brandSort" label="排序"></el-table-column>
+        <el-table-column prop="brandLogo" label="品牌logo"></el-table-column>
+        <el-table-column prop="brandUrl" label="地址"></el-table-column>
+        <el-table-column prop="introduce" label="描述"></el-table-column>
+        <el-table-column label="操作">
+            <template slot-scope="scope">
+                <el-button type="primary" icon="el-icon-edit" size="small" @click="update(scope)">修改</el-button>
+                <el-button type="danger" icon="el-icon-delete" size="small" @click="del(scope)">删除</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+</div>
+<script src="../vue/vue.min.js"></script>
+<script src="../vue/axios.min.js"></script>
+<script src="../vue/qs.js"></script>
+<script src="../elementUI/index.js"></script>
+<script>
+    var app = new Vue({
+        el:"#app",
+        data:{
+            list:[],
+            dialogVisible:false,
+            updateFlag:true,
+            delFlag:true,
+            formData:{},
+            //表单验证
+            rules: {
+                brandName: [
+                    {required: true, message: '请输入品牌名称', trigger: 'blur'},
+                    {min: 3, max: 8, message: '长度在 3 到 8 个字符', trigger: 'blur'}
+                ]
+            }
+        },
+        created:function () {
+            this.findAll();
+        },
+        methods:{
+            findAll:function () {
+                axios.get("/brand/findAll").then(function (value) {
+                    //console.log(value);
+                    app.list = value.data;
+                    app.$message.success("加载成功")
+                }).catch(function (reason) {
+                    app.$message.error("加载失败")
+                })
+            },
+            getSelection:function (val) {
+                if(val.length==1){
+                    this.updateFlag = false;
+                    var brandVal = val.getValueIndex(1);
+                    console.log(brandVal);
+                }else{
+                    this.updateFlag = true;
+                }
+                if(val.length > 0){
+                    this.delFlag = false;
+                } else {
+                    this.delFlag = true;
+                }
+            },
+            update:function (scope) {
+
+            },
+            del:function (scope) {
+
+            },
+            handleCloseDialog:function (close) {
+                this.formData = {};
+                close();
+            },
+            cancel:function () {
+                this.formData = {};
+                this.dialogVisible = false;
+            },
+            submitFormData:function () {
+
+            },
+            checkUpdate:function () {
+
+            },
+            deletes:function () {
+
+            }
+        }
+    });
+
+
+</script>
+</body>
+</html>

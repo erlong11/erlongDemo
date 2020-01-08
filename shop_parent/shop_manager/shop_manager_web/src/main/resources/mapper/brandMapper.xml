@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youzhong.shop.dao.BrandMapper">
+    <resultMap id="BaseResultMap" type="com.youzhong.shop.entity.Brand">
+       <id column="brand_id" property="brandId" javaType="int"></id>
+        <result column="brand_logo" javaType="string" property="brandLogo"></result>
+        <result column="brand_name" javaType="string" property="brandName"></result>
+        <result column="brand_url" javaType="string" property="brandUrl"></result>
+        <result column="brand_sort" javaType="int" property="brandSort"></result>
+        <result column="introduce" javaType="string" property="introduce"></result>
+    </resultMap>
+    <select id="findAll" resultMap="BaseResultMap" >
+        select * from s_brand
+    </select>
+</mapper>
